@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=notify
-ExecStart=/home/michael/test/fsw
+ExecStart=/home/michael/systemd_watchdog/build/fsw
 WatchdogSec=10s
 Restart=on-failure
 NotifyAccess=all

@@ -6,61 +6,23 @@
 #include <ctime>
 #include <cstring>
 
-// void writeDateToLog() {
-//     FILE* logFile;
-//     logFile = fopen("/home/michael/test/fsw.log", "w");
-
-//     // Get current time and format it
-//     auto now = std::chrono::system_clock::now();
-//     auto now_c = std::chrono::system_clock::to_time_t(now);
-//     // logFile << std::ctime(&now_c) << " - FSW task executed" << std::endl;
-
-//     fprintf(logFile, "%s - FSW task executed\n", std::ctime(&now_c));
-//     fclose(logFile);
-// }
-
 void writeDateToLog() {
-    FILE* logFile;
-    logFile = fopen("/home/michael/test/fsw.log", "a"); // Open the file in append mode
+    std::ofstream logFile;
+    logFile.open("/home/michael/systemd_watchdog/fsw.log", std::ios::app); // Open the file in append mode, create if not exists
 
     // Get current time and format it
     auto now = std::chrono::system_clock::now();
     auto now_c = std::chrono::system_clock::to_time_t(now);
     char* timeStr = std::ctime(&now_c);
 
-    // Removed the newline character from the end of the time string
     size_t len = strlen(timeStr);
     if (len > 0 && timeStr[len - 1] == '\n') {
         timeStr[len - 1] = '\0';
     }
 
-    fprintf(logFile, "%s - FSW task executed\n", timeStr);
-    fclose(logFile);
+    logFile << timeStr << " - FSW task executed\n";
+    logFile.close();
 }
-
-// void writeCurrentDateTimeToLogFile() {
-//     // Open the log file in append mode
-//     std::ofstream logFile("/var/tmp/fsw.log", std::ios_base::app);
-//     if (!logFile.is_open()) {
-//         perror("Failed to open log file");
-//         return;
-//     }
-//     else {
-//         printf("Log file opened successfully.\n");
-//     }
-
-//     // Get current time and format it
-//     auto now = std::chrono::system_clock::now();
-//     auto now_c = std::chrono::system_clock::to_time_t(now);
-//     logFile << std::ctime(&now_c) << " - FSW task executed" << std::endl;
-
-//     if (!logFile.good()) {
-//         std::perror("Failed to write to log file");
-//     }
-//     else {
-//         printf("Log entry written successfully.\n");
-//     }
-// }
 
 int main() {
     setbuf(stdout, NULL);

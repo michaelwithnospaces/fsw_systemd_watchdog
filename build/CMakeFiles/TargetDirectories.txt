@@ -1,0 +1,3 @@
+/home/michael/systemd_watchdog/build/CMakeFiles/fsw.dir
+/home/michael/systemd_watchdog/build/CMakeFiles/edit_cache.dir
+/home/michael/systemd_watchdog/build/CMakeFiles/rebuild_cache.dir

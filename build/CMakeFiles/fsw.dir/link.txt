@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/fsw.dir/fsw.cpp.o -o fsw  -lsystemd -lpthread
