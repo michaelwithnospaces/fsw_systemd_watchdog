@@ -20,7 +20,7 @@ sudo pacman -S cmake base-devel systemd
 You need to specify the path to the log file in `fsw.cpp`:
 
 - Open `fsw.cpp` in your favorite text editor.
-- Find the line containing `logFile = fopen("/path/to/logfile/fsw.log", "a");`.
+- Find the line containing `logFile.open("//path/to/logfile/fsw.log", std::ios::app);`.
 - Replace `"/path/to/logfile/"` with the path where you wish to store your log file, ensuring the specified location has the appropriate write permissions.
 
 ## 3. Compile the Program
@@ -48,27 +48,13 @@ Follow these steps to compile `fsw`:
 
 To manage `fsw` as a systemd service with watchdog functionality:
 
-1. **Create `fsw.service` File**
+1. **Open `fsw.service` File**
 
-   Create a new file named `fsw.service` in `/etc/systemd/system/` with the following content, customizing the `ExecStart` path as necessary:
+    Replace `/path/to/your/build/directory/fsw` with the actual path to the `fsw` executable. The `WatchdogSec=10s` specifies the service should be checked every 10 seconds.
 
-    ```ini
-    [Unit]
-    Description=FSW Service with Watchdog
-    After=network.target
-
-    [Service]
-    Type=notify
-    ExecStart=/path/to/your/build/directory/fsw
-    WatchdogSec=10s
-    Restart=on-failure
-    NotifyAccess=all
-
-    [Install]
-    WantedBy=multi-user.target
     ```
-
-   Replace `/path/to/your/build/directory/fsw` with the actual path to the `fsw` executable. The `WatchdogSec=10s` specifies the service should be checked every 10 seconds.
+    ExecStart=/path/to/your/build/directory/fsw
+    ```
 
 2. **Enable and Start Service**
    
@@ -111,7 +97,7 @@ Change the log file path in `fsw.cpp` to point to your desired location. This in
 
 Find the line:
 ```cpp
-logFile = fopen("/path/to/logfile/fsw.log", "a");
+logFile.open("//path/to/logfile/fsw.log", std::ios::app);
 ```
 
 Replace `"/path/to/logfile/"` with the actual path where you want the log file, ensuring the path has proper write permissions.
@@ -137,27 +123,13 @@ make
 
 This process will create an executable named `fsw` in the `build` directory.
 
-## 4. Create a systemd Service File
+## 4. Open fsw.service File
 
-If you want your program to run as a systemd service, create a service file named `fsw.service` in the `/etc/systemd/system/` directory with the following content:
+Replace `/path/to/your/build/directory/fsw` with the actual path to the `fsw` executable. The `WatchdogSec=10s` specifies the service should be checked every 10 seconds.
 
-```ini
-[Unit]
-Description=FSW Service with Watchdog
-After=network.target
-
-[Service]
-Type=notify
-ExecStart=/path/to/your/build/directory/fsw
-WatchdogSec=10s
-Restart=on-failure
-NotifyAccess=all
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Be sure to replace `/path/to/your/build/directory/fsw` with the actual path to your compiled `fsw` executable. The `WatchdogSec` parameter sets the watchdog interval (in this case, 10 seconds).
+    ```
+    ExecStart=/path/to/your/build/directory/fsw
+    ```
 
 ## 5. Enable and Start the Service
 
