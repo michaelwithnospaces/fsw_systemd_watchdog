@@ -1,62 +1,177 @@
-# For Arch Linux Distro
+# Installation Instructions for Arch Linux
 
-1. Install Dependencies
+This guide walks you through setting up the `fsw` (File System Watcher) on an Arch Linux distribution. Follow these steps to install dependencies, compile the program, and run it as a systemd service.
 
-# Dependencies
-	sudo pacman -Syu
-	sudo pacman -S cmake base-devel systemd
- 
-2. Edit fsw.cpp
+## Prerequisites
 
-Replace /home/michael/test/fsw.log" in logFile = fopen("/home/michael/test/fsw.log", "a") with the actual path to where you want the log file. Ensure proper write permissions.
+Before you begin, ensure you have a working Arch Linux setup and that you have sudo privileges.
 
-3. Compile the Program
+## 1. Install Dependencies
 
-Next, navigate to the directory containing your code and use CMake to build the fsw executable:
+Update your system and install the necessary packages:
 
-# Create a build directory and navigate into it
-	mkdir build && cd build
+```bash
+sudo pacman -Syu
+sudo pacman -S cmake base-devel systemd
+```
 
-# Run CMake to configure the build environment
-	cmake ..
+## 2. Configure `fsw.cpp`
 
-# Compile the program
-	make
+You need to specify the path to the log file in `fsw.cpp`:
 
-This process will create an executable named fsw in the build directory.
+- Open `fsw.cpp` in your favorite text editor.
+- Find the line containing `logFile = fopen("/home/michael/test/fsw.log", "a");`.
+- Replace `"/home/michael/test/fsw.log"` with the path where you wish to store your log file, ensuring the specified location has the appropriate write permissions.
 
-4. Create a systemd Service File. If you want to manage your program as a systemd service, create a service unit file, let's say fsw.service, in the /etc/systemd/system/ directory with appropriate configuration. Here's an example of what it might contain:
+## 3. Compile the Program
 
-To run your program as a service and make use of the watchdog functionality, you'll need to create a systemd service file.
+Follow these steps to compile `fsw`:
+
+1. **Create and Enter Build Directory**
+    ```bash
+    mkdir build && cd build
+    ```
+   
+2. **Configure Build with CMake**
+    ```bash
+    cmake ..
+    ```
+
+3. **Compile**
+    ```bash
+    make
+    ```
+   
+   This will create the `fsw` executable within the `build` directory.
+
+## 4. Systemd Service
+
+To manage `fsw` as a systemd service with watchdog functionality:
+
+1. **Create `fsw.service` File**
+
+   Create a new file named `fsw.service` in `/etc/systemd/system/` with the following content, customizing the `ExecStart` path as necessary:
+
+    ```ini
+    [Unit]
+    Description=FSW Service with Watchdog
+    After=network.target
+
+    [Service]
+    Type=notify
+    ExecStart=/path/to/your/build/directory/fsw
+    WatchdogSec=10s
+    Restart=on-failure
+    NotifyAccess=all
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+   Replace `/path/to/your/build/directory/fsw` with the actual path to the `fsw` executable. The `WatchdogSec=10s` specifies the service should be checked every 10 seconds.
+
+2. **Enable and Start Service**
+   
+   Copy your service file to the systemd directory, reload systemd to recognize your new service, enable it to start at boot, and then start the service:
+
+    ```bash
+    sudo cp fsw.service /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl enable fsw.service
+    sudo systemctl start fsw.service
+    ```
+
+## 5. Verify Service Status
+
+Check the status of your `fsw` service to ensure it's running as expected:
+
+```bash
+systemctl status fsw.service
+```
 
 
-	[Unit]
-	Description=FSW Service with Watchdog
-	After=network.target
+# For Debian Linux Distro
 
-	[Service]
-	Type=notify
-	ExecStart=/path/to/your/build/directory/fsw
-	WatchdogSec=10s
-	Restart=on-failure
-	NotifyAccess=all
+## 1. Install Dependencies
 
-	[Install]
-	WantedBy=multi-user.target
+Debian uses the `apt` package manager instead of `pacman`. To install the necessary dependencies:
 
-Replace /path/to/your/build/directory/fsw with the actual path to your compiled fsw executable. The WatchdogSec parameter specifies the watchdog interval (in this case, 10 seconds), which your program must adhere to.
+```bash
+sudo apt update && sudo apt upgrade
+sudo apt install cmake build-essential systemd
+```
 
-5. Enable and Start the Service
+## 2. Edit `fsw.cpp`
 
-Copy the service file to /etc/systemd/system/ and then use systemctl to enable and start the service:
+Change the log file path in `fsw.cpp` to point to your desired location. This involves modifying the `fopen` function call:
 
-	sudo cp fsw.service /etc/systemd/system/
-	sudo systemctl daemon-reload
-	sudo systemctl enable fsw.service
-	sudo systemctl start fsw.service
+Find the line:
+```cpp
+logFile = fopen("/home/michael/test/fsw.log", "a");
+```
 
-6. Check the Service Status
+Replace `"/home/michael/test/fsw.log"` with the actual path where you want the log file, ensuring the path has proper write permissions.
 
-To verify that the service is running correctly and interacting with the watchdog:
+## 3. Compile the Program
 
-	systemctl status fsw.service
+To compile your program, follow these steps:
+
+- Create a build directory and navigate into it:
+```bash
+mkdir build && cd build
+```
+
+- Run CMake to configure the build environment:
+```bash
+cmake ..
+```
+
+- Compile the program:
+```bash
+make
+```
+
+This process will create an executable named `fsw` in the `build` directory.
+
+## 4. Create a systemd Service File
+
+If you want your program to run as a systemd service, create a service file named `fsw.service` in the `/etc/systemd/system/` directory with the following content:
+
+```ini
+[Unit]
+Description=FSW Service with Watchdog
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/path/to/your/build/directory/fsw
+WatchdogSec=10s
+Restart=on-failure
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Be sure to replace `/path/to/your/build/directory/fsw` with the actual path to your compiled `fsw` executable. The `WatchdogSec` parameter sets the watchdog interval (in this case, 10 seconds).
+
+## 5. Enable and Start the Service
+
+To enable and start your new service:
+
+```bash
+sudo cp fsw.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable fsw.service
+sudo systemctl start fsw.service
+```
+
+## 6. Check the Service Status
+
+To verify that the service is running correctly and is interacting with the watchdog:
+
+```bash
+systemctl status fsw.service
+```
+
+This adjusted guide takes into account Debian's system architecture, ensuring a smooth setup process for Debian users.
