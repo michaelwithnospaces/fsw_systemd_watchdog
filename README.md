@@ -1,9 +1,11 @@
-For Arch Linux Distro
+# For Arch Linux Distro
 
 1. Install Dependencies
 
+# Dependencies
 	sudo pacman -Syu
 	sudo pacman -S cmake base-devel systemd
+ 
 2. Edit fsw.cpp
 
 Replace /home/michael/test/fsw.log" in logFile = fopen("/home/michael/test/fsw.log", "a") with the actual path to where you want the log file. Ensure proper write permissions.
