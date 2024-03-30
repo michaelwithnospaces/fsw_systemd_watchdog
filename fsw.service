@@ -1,0 +1,13 @@
+[Unit]
+Description=FSW Service with Watchdog
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/home/michael/test/fsw
+WatchdogSec=10s
+Restart=on-failure
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
