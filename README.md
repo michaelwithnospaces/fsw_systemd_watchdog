@@ -20,8 +20,8 @@ sudo pacman -S cmake base-devel systemd
 You need to specify the path to the log file in `fsw.cpp`:
 
 - Open `fsw.cpp` in your favorite text editor.
-- Find the line containing `logFile = fopen("/home/michael/test/fsw.log", "a");`.
-- Replace `"/home/michael/test/fsw.log"` with the path where you wish to store your log file, ensuring the specified location has the appropriate write permissions.
+- Find the line containing `logFile = fopen("/path/to/logfile/fsw.log", "a");`.
+- Replace `"/path/to/logfile/"` with the path where you wish to store your log file, ensuring the specified location has the appropriate write permissions.
 
 ## 3. Compile the Program
 
@@ -107,10 +107,10 @@ Change the log file path in `fsw.cpp` to point to your desired location. This in
 
 Find the line:
 ```cpp
-logFile = fopen("/home/michael/test/fsw.log", "a");
+logFile = fopen("/path/to/logfile/fsw.log", "a");
 ```
 
-Replace `"/home/michael/test/fsw.log"` with the actual path where you want the log file, ensuring the path has proper write permissions.
+Replace `"/path/to/logfile/"` with the actual path where you want the log file, ensuring the path has proper write permissions.
 
 ## 3. Compile the Program
 
