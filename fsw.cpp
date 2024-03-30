@@ -8,7 +8,7 @@
 
 void writeDateToLog() {
     std::ofstream logFile;
-    logFile.open("/home/michael/systemd_watchdog/fsw.log", std::ios::app); // Open the file in append mode, create if not exists
+    logFile.open("/path/to/logfile/fsw.log", std::ios::app); // Open the file in append mode, create if not exists
 
     // Get current time and format it
     auto now = std::chrono::system_clock::now();
