@@ -1,3 +1,5 @@
+For Arch Linux Distro
+
 1. Install Dependencies
 
 	sudo pacman -Syu
@@ -18,7 +20,7 @@ Next, navigate to the directory containing your code and use CMake to build the 
 
 This process will create an executable named fsw in the build directory.
 
-3. Create a systemd Service File
+3. Create a systemd Service File. If you want to manage your program as a systemd service, create a service unit file, let's say fsw.service, in the /etc/systemd/system/ directory with appropriate configuration. Here's an example of what it might contain:
 
 To run your program as a service and make use of the watchdog functionality, you'll need to create a systemd service file.
 
